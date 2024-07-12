@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eduqu'Action</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        h2, h3 {
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+        input[type="text"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-top: 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .course-list {
+            margin-top: 20px;
+        }
+        .course-item {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+        .course-content {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            border-top: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Eduqu'Action</h2>
+        
+        <label for="subject">Matière</label>
+        <select id="subject">
+            <option value="Français">Français</option>
+            <option value="Maths">Maths</option>
+            <option value="Anglais">Anglais</option>
+            <option value="Espagnol">Espagnol</option>
+            <option value="Histoire-Géo">Histoire-Géo</option>
+            <option value="SVT">SVT</option>
+            <option value="Science Physics">Science Physics</option>
+        </select>
+        
+        <label for="courseName">Nom du cours</label>
+        <input type="text" id="courseName" placeholder="Nom du cours">
+        
+        <label for="courseContent">Contenu du cours</label>
+        <textarea id="courseContent" rows="4" placeholder="Contenu du cours"></textarea>
+        
+        <button onclick="addCourse()">Ajouter le cours</button>
+        
+        <h3>Filtrer par matière</h3>
+        <label for="filterSubject">Matière</label>
+        <select id="filterSubject" onchange="filterCourses()">
+            <option value="Tous">Tous</option>
+            <option value="Français">Français</option>
+            <option value="Maths">Maths</option>
+            <option value="Anglais">Anglais</option>
+            <option value="Espagnol">Espagnol</option>
+            <option value="Histoire-Géo">Histoire-Géo</option>
+            <option value="SVT">SVT</option>
+            <option value="Science Physics">Science Physics</option>
+        </select>
+
+        <div class="course-list" id="courseList">
+            <!-- Liste des cours ajoutés -->
+        </div>
+    </div>
+
+    <script>
+        function addCourse() {
+            const subject = document.getElementById('subject').value;
+            const courseName = document.getElementById('courseName').value;
+            const courseContent = document.getElementById('courseContent').value;
+            
+            if (courseName === '' || courseContent === '') {
+                alert('Veuillez remplir tous les champs.');
+                return;
+            }
+            
+            const courseList = document.getElementById('courseList');
+            const courseItem = document.createElement('div');
+            courseItem.classList.add('course-item');
+            courseItem.setAttribute('data-subject', subject);
+            
+            courseItem.innerHTML = `
+                <h3>${courseName} (${subject})</h3>
+                <div class="course-content">${courseContent}</div>
+            `;
+            
+            courseItem.addEventListener('click', function() {
+                const allContents = document.querySelectorAll('.course-content');
+                allContents.forEach(content => content.style.display = 'none');
+                
+                const content = this.querySelector('.course-content');
+                content.style.display = 'block';
+            });
+            
+            courseList.appendChild(courseItem);
+            
+            // Clear input fields
+            document.getElementById('subject').value = 'Français';
+            document.getElementById('courseName').value = '';
+            document.getElementById('courseContent').value = '';
+            
+            // Reset filter to "Tous" and show all courses
+            document.getElementById('filterSubject').value = 'Tous';
+            filterCourses();
+        }
+
+        function filterCourses() {
+            const filterSubject = document.getElementById('filterSubject').value;
+            const courses = document.querySelectorAll('.course-item');
+            
+            courses.forEach(course => {
+                if (filterSubject === 'Tous' || course.getAttribute('data-subject') === filterSubject) {
+                    course.style.display = 'block';
+                } else {
+                    course.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
